@@ -112,7 +112,7 @@ def trial(team_1, epv_1, team_2, epv_2):
     print("Probability for team 1:  " + str(boundary))
     rand = random.uniform(0, 1)
     print("Random number: " + str(rand))
-    print("The pick is: " + team_1.name if rand < boundary else team_2.name)
+    print("The pick is: " + (team_1.name if rand < boundary else team_2.name))
 
 
 if __name__ == "__main__":
