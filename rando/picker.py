@@ -15,14 +15,18 @@ class Team:
 
 
 def main():
+    print("Which tournament are you making a bracket for, men's or women's? (M/w)")
+    gender = "mens"
+    if input() == "w":
+        gender = "womens"
+
     teams = {}
     filename = sys.argv[1]
     with open(filename) as file:
         reader = csv.reader(file, delimiter=',')
-        line = 0
         for row in reader:
-            if line == 0:
-                line += 1
+            if row[0] != gender:
+                # Exclude results from the other tournament.
                 continue
             else:
                 id = row[12]
@@ -32,13 +36,10 @@ def main():
                 seed = row[16]
                 team = Team(id, name, seed, region, probs)
                 teams[id] = team
-                line += 1
 
     total_teams = 64
     round = 0
     print("Total number of teams: " + str(total_teams))
-
-    # Everything below will be in loop
 
     # 5 rounds total
     while round < 6:
