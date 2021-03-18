@@ -2,13 +2,14 @@ import csv
 import math
 import random
 import sys
+import re
 
 
 class Team:
     def __init__(self, id, name, seed, region, probs):
         self.id = id
         self.name = name
-        self.seed = int(seed)
+        self.seed = parse_seed(seed)
         self.region = region
         self.probs = probs
 
@@ -89,6 +90,16 @@ def expected_point_value(round, prob, seed, other_seed):
     base = math.pow(2, round)
     score = base + seed_differential(seed, other_seed)
     return prob * score
+
+
+def parse_seed(seed):
+    try:
+        return int(seed)
+    except ValueError:
+        # Apparently seeds can be "11a", "11b", etc., whatever that means.
+        match = re.search(r'(\d+)[ab]', seed)
+        if match:
+            return int(match.group(1))
 
 
 def seed_differential(one, two):
