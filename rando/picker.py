@@ -6,7 +6,7 @@ import re
 
 # TODO Figure out how to make these arguments
 verbose = False 
-confirm = True
+confirm = True 
 
 class Team:
     def __init__(self, id, name, seed, region, probs):
@@ -25,13 +25,16 @@ regions = ["West", "South", "East", "Midwest"]
 seeds = [1, 16, 8, 9, 5, 12, 4, 13, 6, 11, 3, 14, 7, 10, 2, 15]
 seed_to_index = {k:v for (k, v) in zip(seeds, range(0, 16))}
 
+# Having this out here makes it possible to use the script in the REPL to make one-off picks
+# (if you don't want to re-run your whole bracket)
+teams = {}
+
 def main():
     print("Which tournament are you making a bracket for, men's or women's? (M/w)")
     gender = "mens"
     if input() == "w":
         gender = "womens"
 
-    teams = {}
     filename = sys.argv[1]
 
     bracket = [[] for i in range(0, 6)]
@@ -99,13 +102,13 @@ def main():
 
     print("\nFinal Four")
     west = last_round_picks["West"][0]
-    south = last_round_picks["South"][0]
-    team_1 = make_pick(teams[west], teams[south], round)
+    east = last_round_picks["East"][0]
+    team_1 = make_pick(teams[west], teams[east], round)
     bracket[round].append(team_1.name)
 
+    south = last_round_picks["South"][0]
     midwest = last_round_picks["Midwest"][0]
-    east = last_round_picks["East"][0]
-    team_2 = make_pick(teams[midwest], teams[east], round)
+    team_2 = make_pick(teams[south], teams[midwest], round)
     bracket[round].append(team_2.name)
 
     round += 1
