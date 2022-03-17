@@ -43,7 +43,19 @@ def main():
 
     with open(filename) as file:
         reader = csv.reader(file, delimiter=',')
+        forecast_date = None
         for row in reader:
+
+            # Skip the column headers row
+            if row[1] == "forecast_date":
+              continue
+            elif forecast_date is None:
+              forecast_date = row[1]
+              print("Using forecast data from " + forecast_date)
+            else:
+              if forecast_date != row[1]:
+                continue
+          
             if row[0] != gender:
                 # Exclude results from the other tournament.
                 continue
@@ -61,6 +73,19 @@ def main():
 
                 # This arranges the teams in the right order for matchups (1, 16, ..., 2, 15)
                 index = seed_to_index[parse_seed(seed)]
+
+                if last_round_picks[region][index] != None:
+                  existing = last_round_picks[region][index]
+                  print("Found two teams for the same seed. Which was the winner? 1/2")
+                  print("1. " + teams[existing].name)
+                  print("2. " + teams[id].name)
+                  winner = input()
+                  while winner not in ["1", "2"]:
+                    print("Sorry, I didn't understand that. Please enter 1 or 2")
+                    winner = input()
+                  if winner == "1":
+                    continue
+
                 last_round_picks[region][index] = id
 
     round = 0
