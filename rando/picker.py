@@ -52,11 +52,19 @@ def main():
 
             print("Enter team ids")
             id_1 = input()
-            id_2 = input()
+            while not teams.get(id_1):
+              print("Invalid team id: " + id_1)
+              id_1 = input()
 
             team_1 = teams[id_1]
-            team_2 = teams[id_2]
             print("Team 1: " + team_1.name)
+
+            id_2 = input()
+            while not teams.get(id_2):
+              print("Invalid team id: " + id_2)
+              id_2 = input()
+
+            team_2 = teams[id_2]
             print("Team 2: " + team_2.name)
 
             print("Probabilities for round:")
