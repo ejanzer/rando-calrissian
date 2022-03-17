@@ -31,6 +31,8 @@ def main():
     teams = {}
     filename = sys.argv[1]
 
+    bracket = [[] for i in range(0, 6)]
+
     # Initialize arrays for each region so that we can insert teams in the correct index
     last_round_picks = {}
     for region in regions:
@@ -63,21 +65,34 @@ def main():
       num_teams = 64 // 2**round
       picks = make_picks_for_round(round, num_teams, teams, last_round_picks)
       last_round_picks = picks
+      for region in regions:
+        bracket[round] += [teams[id].name for id in last_round_picks[region]]
       round += 1
 
     print("\nFinal Four")
     west = last_round_picks["West"][0]
     south = last_round_picks["South"][0]
     team_1 = make_pick(teams[west], teams[south], round)
+    bracket[round].append(team_1.name)
 
     midwest = last_round_picks["Midwest"][0]
     east = last_round_picks["East"][0]
     team_2 = make_pick(teams[midwest], teams[east], round)
+    bracket[round].append(team_2.name)
 
     round += 1
     print("\nFinals")
     champion = make_pick(team_1, team_2, round)
-    print(champion)
+    bracket[round].append(champion.name)
+    print("And the winner is..." + champion.name + "!")
+
+    print("Print full bracket? Y/n")
+    confirm = input()
+    if (confirm != "n"):
+      for i in range(0, len(bracket)):
+        print("Round " + str(i + 1))
+        print("Picks:")
+        print(bracket[i])
 
 def make_picks_for_round(round, num_teams, teams, last_round_picks):
     print("\nRound of " + str(num_teams))
