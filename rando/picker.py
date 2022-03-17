@@ -4,6 +4,9 @@ import random
 import sys
 import re
 
+# TODO Figure out how to make these arguments
+verbose = False 
+confirm = True
 
 class Team:
     def __init__(self, id, name, seed, region, probs):
@@ -112,10 +115,11 @@ def make_picks_for_round(round, num_teams, teams, last_round_picks):
         team_2 = teams[id_2]
         winner = make_pick(team_1, team_2, round)
 
-        # print("Ready to continue? (Y/n)")
-        # confirm = input()
-        # if confirm == "n":
-        #   raise Exception("Abandon ship!")
+        if confirm:
+          print("Ready to continue? (Y/n)")
+          ready = input()
+          if ready == "n":
+            raise Exception("Abandon ship!")
 
         picks[region].append(winner.id)
     
@@ -124,19 +128,24 @@ def make_picks_for_round(round, num_teams, teams, last_round_picks):
 def make_pick(team_1, team_2, round):
   print(team_1)
   print(team_2)
-  # print("Probabilities for round:")
+  if verbose:
+    print("Probabilities for round:")
   prob_1 = float(team_1.probs[round])
   prob_2 = float(team_2.probs[round])
-  # print(team_1.name + ": " + str(prob_1))
-  # print(team_2.name + ": " + str(prob_2))
+  if verbose:
+    print(team_1.name + ": " + str(prob_1))
+    print(team_2.name + ": " + str(prob_2))
 
-  # print("Expected point values: ")
+  if verbose:
+    print("Expected point values: ")
   epv_1 = expected_point_value(
       round, prob_1, team_1.seed, team_2.seed)
-  # print(team_1.name + ": " + str(epv_1))
+  if verbose:
+    print(team_1.name + ": " + str(epv_1))
   epv_2 = expected_point_value(
       round, prob_2, team_2.seed, team_1.seed)
-  # print(team_2.name + ": " + str(epv_2))
+  if verbose:
+    print(team_2.name + ": " + str(epv_2))
 
   winner = trial(team_1, epv_1, team_2, epv_2)
   print("Your pick is: " + winner.name)
@@ -165,9 +174,11 @@ def seed_differential(one, two):
 
 def trial(team_1, epv_1, team_2, epv_2):
     boundary = epv_1 / (epv_1 + epv_2)
-    # print("Probability for team 1:  " + str(boundary))
+    if verbose:
+      print("Probability for team 1:  " + str(boundary))
     rand = random.uniform(0, 1)
-    # print("Random number: " + str(rand))
+    if verbose:
+      print("Random number: " + str(rand))
     return team_1 if rand < boundary else team_2
 
 
