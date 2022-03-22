@@ -13,6 +13,7 @@
 
 ## Notes
 
+- This script assumes that you get bonus points for upsets based on the seed differential! If your pool doesn't use that rule, this is probably not ideal (but it does make things super interesting!)
 - If you'd rather get the whole bracket at once, change the value of `confirm` to `False` in `picker.py` and say yes when it asks if you want to print the whole thing at the end.
 - If you're not sure what it's doing, change the value of `verbose` to `True` in `picker.py` and it will print logs.
 - Pressing 'n' when it asks you to confirm will exit the program. This might not be what you expect.
