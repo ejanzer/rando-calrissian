@@ -6,7 +6,7 @@ import re
 
 # TODO Figure out how to make these arguments
 verbose = False 
-confirm = True 
+confirm = True
 
 class Team:
     def __init__(self, id, name, seed, region, probs):
@@ -19,11 +19,10 @@ class Team:
     def __str__(self):
       return str(self.seed) + " " + self.name
 
-
-regions = ["West", "South", "East", "Midwest"]
-
 seeds = [1, 16, 8, 9, 5, 12, 4, 13, 6, 11, 3, 14, 7, 10, 2, 15]
 seed_to_index = {k:v for (k, v) in zip(seeds, range(0, 16))}
+
+region_positions = ["upper left", "upper right", "lower left", "lower right"]
 
 # Having this out here makes it possible to use the script in the REPL to make one-off picks
 # (if you don't want to re-run your whole bracket)
@@ -34,6 +33,28 @@ def main():
     gender = "mens"
     if input() == "w":
         gender = "womens"
+
+    regions = []
+    # Put the regions in the proper order: upper left, upper right, lower left, lower right
+    available_regions = ["West", "South", "East", "Midwest"]
+    region_index = 0
+    while region_index < 3:
+      print("Which region is in the " + region_positions[region_index] + "?")
+      for i in range(len(available_regions)):
+        print(str(i + 1) + ". " + available_regions[i])
+      selection = input()
+      try:
+        index = int(selection) - 1
+        regions.append(available_regions.pop(index))
+        region_index += 1
+      except:
+        print("Please enter a valid number.")
+        continue
+
+    # We don't need to ask for the last one
+    regions.append(available_regions.pop())
+    if verbose:
+      print(regions)
 
     filename = sys.argv[1]
 
@@ -94,21 +115,21 @@ def main():
     round = 0
     while round < 4:
       num_teams = 64 // 2**round
-      picks = make_picks_for_round(round, num_teams, teams, last_round_picks)
+      picks = make_picks_for_round(regions, round, num_teams, teams, last_round_picks)
       last_round_picks = picks
       for region in regions:
         bracket[round] += [teams[id].name for id in last_round_picks[region]]
       round += 1
 
     print("\nFinal Four")
-    west = last_round_picks["West"][0]
-    east = last_round_picks["East"][0]
-    team_1 = make_pick(teams[west], teams[east], round)
+    top_left = last_round_picks[regions[0]][0]
+    bottom_left = last_round_picks[regions[2]][0]
+    team_1 = make_pick(teams[top_left], teams[bottom_left], round)
     bracket[round].append(team_1.name)
 
-    south = last_round_picks["South"][0]
-    midwest = last_round_picks["Midwest"][0]
-    team_2 = make_pick(teams[south], teams[midwest], round)
+    top_right = last_round_picks[regions[1]][0]
+    bottom_right = last_round_picks[regions[3]][0]
+    team_2 = make_pick(teams[top_right], teams[bottom_right], round)
     bracket[round].append(team_2.name)
 
     round += 1
@@ -125,7 +146,7 @@ def main():
         print("Picks:")
         print(bracket[i])
 
-def make_picks_for_round(round, num_teams, teams, last_round_picks):
+def make_picks_for_round(regions, round, num_teams, teams, last_round_picks):
     print("\nRound of " + str(num_teams))
     picks = {}
     for region in regions:
