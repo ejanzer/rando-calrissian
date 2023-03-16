@@ -146,6 +146,13 @@ def main():
         print("Picks:")
         print(bracket[i])
 
+    print("Tiebreaker scores:")
+    print(str(random_score()))
+    print(str(random_score()))
+
+def random_score():
+  return round(random.gauss(71.0, 17.0))
+
 def make_picks_for_round(regions, round, num_teams, teams, last_round_picks):
     print("\nRound of " + str(num_teams))
     picks = {}
